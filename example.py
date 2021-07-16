@@ -4,18 +4,23 @@ from google.protobuf.duration_pb2 import Duration
 
 from feast import Entity, Feature, FeatureView, ValueType
 from feast.data_source import FileSource
+import pathlib
 
 # 1 Read data from parquet files. Parquet is convenient for local development mode. For
 # production, you can use your favorite DWH, such as BigQuery. See Feast documentation
 # for more info.
+# Resolve for current working directory via pathlib
+filepath = str(pathlib.Path().resolve())
+filepath = filepath.replace("example.py", "")
+
 cancel_stats = FileSource(
-    path="/Users/alanschen/Arize/tutorials/feast-tutorial/feature_repo/data/cancel_stats.parquet",
+    path=filepath + "/data/cancel_stats.parquet",
     event_timestamp_column="datetime",
     created_timestamp_column="created",
 )
 
 basic_stats = FileSource(
-    path="/Users/alanschen/Arize/tutorials/feast-tutorial/feature_repo/data/user_stats.parquet",
+    path=filepath + "/data/user_stats.parquet",
     event_timestamp_column="datetime",
     created_timestamp_column="created",
 )
