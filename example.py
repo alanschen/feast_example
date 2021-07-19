@@ -19,18 +19,11 @@ cancel_stats = FileSource(
     created_timestamp_column="created",
 )
 
-basic_stats = FileSource(
-    path=filepath + "/data/user_stats.parquet",
-    event_timestamp_column="datetime",
-    created_timestamp_column="created",
-)
-
-# 2 Define an entity for the driver. You can think of entity as a primary key used to
-# fetch features.
+# 2 Define an entity for the driver.
 user = Entity(name="user_id", value_type=ValueType.INT64, description="user id",)
 
-# 3 Our parquet files contain sample data that includes a driver_id column, timestamps and
-# three feature column. Here we define a Feature View that will allow us to serve this
+# 3 Our parquet files contain sample data that includes a user_id column, timestamps and
+# two feature column. We define a Feature View that will allow us to serve this
 # data to our model online.
 
 user_cancel_stats_view = FeatureView(
@@ -43,19 +36,5 @@ user_cancel_stats_view = FeatureView(
     ],
     online=True,
     input=cancel_stats, # the feast.data_source defined in step 1
-    tags={},
-)
-
-user_basic_stats_view = FeatureView(
-    name="user_basic_stats",
-    entities=["user_id"],
-    ttl=Duration(seconds=86400 * 1),
-    features=[
-        Feature(name="transaction_price", dtype=ValueType.FLOAT),
-        Feature(name="interest_rate", dtype=ValueType.FLOAT),
-        Feature(name="annual_income", dtype=ValueType.INT32),
-    ],
-    online=True,
-    input=basic_stats, # the feast.data_source defined in step 1
     tags={},
 )
